@@ -20,7 +20,8 @@ export default function ContactForm() {
     setStatus('idle');
 
     try {
-      const { error } = await supabase
+      console.log('Attempting to submit contact form...');
+      const { data, error } = await supabase
         .from('contacts')
         .insert([
           {
@@ -31,8 +32,19 @@ export default function ContactForm() {
           }
         ]);
 
-      if (error) throw error;
+      console.log('Supabase response:', { data, error });
 
+      if (error) {
+        console.error('Supabase error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
+        throw error;
+      }
+
+      console.log('Contact form submitted successfully');
       setStatus('success');
       setFormData({
         name: "",
@@ -42,6 +54,7 @@ export default function ContactForm() {
       });
     } catch (error) {
       console.error('Error submitting form:', error);
+      console.error('Error details:', JSON.stringify(error, null, 2));
       setStatus('error');
     } finally {
       setIsLoading(false);

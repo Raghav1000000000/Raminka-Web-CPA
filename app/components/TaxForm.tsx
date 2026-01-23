@@ -20,6 +20,7 @@ export default function TaxForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const provinces = [
     "Alberta", "British Columbia", "Manitoba", "New Brunswick", 
@@ -133,7 +134,92 @@ export default function TaxForm() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setUploadedFiles(Array.from(e.target.files));
+      const files = Array.from(e.target.files);
+      const validFiles = files.filter(file => file.size <= 10 * 1024 * 1024); // 10MB limit
+      setUploadedFiles(prev => [...prev, ...validFiles]);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    
+    const files = Array.from(e.dataTransfer.files);
+    const validFiles = files.filter(file => {
+      const allowedTypes = [
+        'application/pdf',
+        'image/jpeg',
+        'image/jpg',
+        'image/png',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      ];
+      return allowedTypes.includes(file.type) && file.size <= 10 * 1024 * 1024;
+    });
+    
+    setUploadedFiles(prev => [...prev, ...validFiles]);
+  };
+
+  const getFileIcon = (fileName: string) => {
+    const extension = fileName.split('.').pop()?.toLowerCase();
+    
+    switch (extension) {
+      case 'pdf':
+        return (
+          <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+            <svg className="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+            </svg>
+          </div>
+        );
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+        return (
+          <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+            <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+            </svg>
+          </div>
+        );
+      case 'doc':
+      case 'docx':
+        return (
+          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+            <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+            </svg>
+          </div>
+        );
+      case 'xls':
+      case 'xlsx':
+        return (
+          <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+            <svg className="w-5 h-5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+            </svg>
+          </div>
+        );
+      default:
+        return (
+          <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+            <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+            </svg>
+          </div>
+        );
     }
   };
 
@@ -340,64 +426,138 @@ export default function TaxForm() {
             </div>
 
             {/* Document Upload Section */}
-            <div className="space-y-4 border-t border-gray-200 pt-6">
-              <div className="flex items-center space-x-2 mb-4">
-                <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-                <h4 className="text-lg font-semibold text-gray-900">Upload Documents (Optional)</h4>
+            <div className="space-y-6 border-t border-gray-200 pt-8">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 bg-blue-100 rounded-lg">
+                    <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-900">Upload Documents</h4>
+                    <p className="text-sm text-gray-600">Add your tax documents (optional)</p>
+                  </div>
+                </div>
+                {uploadedFiles.length > 0 && (
+                  <div className="bg-blue-50 px-3 py-1 rounded-full">
+                    <span className="text-sm font-medium text-blue-700">
+                      {uploadedFiles.length} file{uploadedFiles.length !== 1 ? 's' : ''} selected
+                    </span>
+                  </div>
+                )}
               </div>
               
-              <div className="group relative">
-                <div className="relative border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-gray-400 transition-all duration-300 group-hover:bg-gray-50">
+              <div 
+                className={`group relative transition-all duration-300 ${
+                  isDragOver 
+                    ? 'border-blue-400 bg-blue-50 scale-[1.02]' 
+                    : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+                }`}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                <div className="relative border-2 border-dashed rounded-xl p-8 text-center">
                   <input
                     type="file"
                     id="documents"
                     multiple
                     accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx"
                     onChange={handleFileChange}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                   />
-                  <div className="space-y-2">
-                    <svg className="mx-auto h-8 w-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-                    </svg>
-                    <div className="text-gray-600">
-                      <span className="font-semibold text-blue-600 hover:text-blue-500 cursor-pointer">
-                        Choose Files
-                      </span>
-                      <span className="text-sm"> or drag and drop</span>
+                  
+                  <div className="space-y-4">
+                    <div className={`mx-auto w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${
+                      isDragOver 
+                        ? 'bg-blue-100' 
+                        : 'bg-gray-100 group-hover:bg-blue-100'
+                    }`}>
+                      <svg className={`w-6 h-6 transition-colors duration-300 ${
+                        isDragOver 
+                          ? 'text-blue-600' 
+                          : 'text-gray-400 group-hover:text-blue-600'
+                      }`} fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                      </svg>
                     </div>
-                    <p className="text-xs text-gray-500">
-                      PDF, JPG, PNG, DOC, DOCX, XLS, XLSX up to 10MB each
-                    </p>
+                    
+                    <div className="space-y-2">
+                      <div className={`text-lg font-semibold transition-colors duration-300 ${
+                        isDragOver ? 'text-blue-700' : 'text-gray-700'
+                      }`}>
+                        {isDragOver ? 'Drop your files here' : 'Drag & drop your files here'}
+                      </div>
+                      
+                      <p className="text-gray-500">
+                        or{' '}
+                        <span className="text-blue-600 font-semibold hover:text-blue-700 cursor-pointer">
+                          browse to choose files
+                        </span>
+                      </p>
+                      
+                      <div className="flex items-center justify-center space-x-4 text-xs text-gray-500 pt-2">
+                        <span>PDF, JPG, PNG, DOC, XLS</span>
+                        <span>•</span>
+                        <span>Max 10MB per file</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* File Types Guide */}
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100">
+                <div className="flex items-start space-x-3">
+                  <svg className="w-5 h-5 text-blue-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  <div>
+                    <h5 className="font-medium text-blue-900 mb-2">Helpful document types to include:</h5>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-sm text-blue-700">
+                      <div>• T4, T4A, T5 slips</div>
+                      <div>• Income statements</div>
+                      <div>• Expense receipts</div>
+                      <div>• RRSP contributions</div>
+                      <div>• Medical receipts</div>
+                      <div>• Donation receipts</div>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {uploadedFiles.length > 0 && (
-                <div className="space-y-2">
-                  <h5 className="text-sm font-semibold text-gray-700">Selected Files:</h5>
-                  <div className="space-y-2 max-h-32 overflow-y-auto">
+                <div className="space-y-4">
+                  <h5 className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
+                    <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>Files Ready to Upload ({uploadedFiles.length})</span>
+                  </h5>
+                  
+                  <div className="space-y-3 max-h-64 overflow-y-auto pr-2 scrollbar-thin">
                     {uploadedFiles.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
-                        <div className="flex items-center space-x-3">
-                          <svg className="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
-                          </svg>
-                          <div>
-                            <p className="text-sm font-medium text-gray-900 truncate max-w-[200px] sm:max-w-xs">
+                      <div key={index} className="group flex items-center justify-between p-4 bg-white rounded-xl border-2 border-gray-100 hover:border-blue-200 hover:shadow-md transition-all duration-200">
+                        <div className="flex items-center space-x-4 flex-1 min-w-0">
+                          {getFileIcon(file.name)}
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-900 truncate">
                               {file.name}
                             </p>
-                            <p className="text-xs text-gray-500">
-                              {(file.size / 1024 / 1024).toFixed(2)} MB
-                            </p>
+                            <div className="flex items-center space-x-4 text-xs text-gray-500">
+                              <span>{(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                              <span>•</span>
+                              <span className="uppercase">{file.name.split('.').pop()}</span>
+                            </div>
                           </div>
                         </div>
+                        
                         <button
                           type="button"
                           onClick={() => removeFile(index)}
-                          className="text-red-500 hover:text-red-700 transition-colors"
+                          className="flex items-center justify-center w-8 h-8 rounded-full bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-700 transition-all duration-200 opacity-0 group-hover:opacity-100"
+                          title="Remove file"
                         >
                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -409,26 +569,37 @@ export default function TaxForm() {
                 </div>
               )}
               
-              <div className="text-sm text-gray-600 space-y-1">
-                <p>You can upload tax slips, T4, T5, income statements, or any relevant documents.</p>
-                <div className="flex items-center space-x-2 text-green-600">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-xs">Your files will be stored securely and used only for service support.</span>
+              <div className="flex items-start space-x-2 text-sm text-gray-600 bg-gray-50 rounded-lg p-3">
+                <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                </svg>
+                <div>
+                  <p className="font-medium text-gray-700">Secure & Confidential</p>
+                  <p className="text-xs">Your documents are encrypted and stored securely. They'll only be used for your tax preparation and will be deleted after completion.</p>
                 </div>
               </div>
 
               {/* Upload Progress */}
               {isUploading && uploadedFiles.length > 0 && (
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Uploading documents...</span>
-                    <span className="text-blue-600 font-medium">{Math.round(uploadProgress)}%</span>
+                <div className="space-y-3 bg-blue-50 rounded-xl p-4 border border-blue-200">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                        <svg className="w-4 h-4 text-blue-600 animate-spin" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-blue-900">Uploading documents...</p>
+                        <p className="text-xs text-blue-700">Please wait while we securely upload your files</p>
+                      </div>
+                    </div>
+                    <span className="text-sm font-bold text-blue-700">{Math.round(uploadProgress)}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  
+                  <div className="w-full bg-blue-200 rounded-full h-2 overflow-hidden">
                     <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500 ease-out"
                       style={{ width: `${uploadProgress}%` }}
                     ></div>
                   </div>

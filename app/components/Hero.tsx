@@ -1,6 +1,15 @@
 "use client";
 
+import { useEffect, useState } from 'react';
+
 export default function Hero() {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoaded(true), 150);
+    return () => clearTimeout(timer);
+  }, []);
+
   const scrollToContact = () => {
     document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -10,60 +19,96 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 px-4 py-16 overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-10 w-20 h-20 bg-blue-200 rounded-full animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-16 h-16 bg-indigo-200 rounded-full animate-bounce delay-1000"></div>
-        <div className="absolute top-1/2 left-1/4 w-12 h-12 bg-purple-200 rounded-full animate-ping delay-2000"></div>
+    <section className="relative min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 flex items-center justify-center px-4 py-16 overflow-hidden">
+      {/* Professional background elements */}
+      <div className="absolute inset-0 opacity-60">
+        <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-gradient-to-br from-blue-400/20 to-indigo-400/20 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-indigo-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
       </div>
+
+      {/* Subtle grid overlay */}
+      <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(to_right,theme(colors.blue.900)_1px,transparent_1px),linear-gradient(to_bottom,theme(colors.blue.900)_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
       
-      <div className="relative max-w-5xl text-center animate-fade-in">
-        <div className="mb-6 animate-slide-down">
-          <h1 className="text-5xl font-bold text-gray-900 sm:text-6xl lg:text-7xl mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-            Ramika Bahri
-          </h1>
-          <div className="h-1 w-24 bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto rounded-full animate-pulse"></div>
+      {/* Main content */}
+      <div className={`relative max-w-6xl text-center transition-all duration-700 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+        {/* Header section */}
+        <div className={`mb-8 transition-all duration-700 delay-150 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className="relative">
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-900 mb-6 tracking-tight">
+              <span className="block mb-2">Ramika Bahri</span>
+              <span className="block text-3xl sm:text-4xl lg:text-5xl font-medium bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                Tax Professional
+              </span>
+            </h1>
+          </div>
         </div>
         
-        <p className="mb-8 text-xl text-gray-700 sm:text-2xl lg:text-3xl font-light animate-slide-up">
-          Aspiring CPA in Canada
-        </p>
+        <div className={`mb-8 transition-all duration-700 delay-300 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <p className="text-xl sm:text-2xl text-slate-600 font-light mb-4">
+            Aspiring CPA in Canada
+          </p>
+          <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto rounded-full"></div>
+        </div>
         
-        <p className="mb-12 text-lg text-gray-600 max-w-2xl mx-auto animate-fade-in delay-500">
-          Professional Personal Tax Support & Financial Guidance
-        </p>
+        <div className={`mb-12 transition-all duration-700 delay-450 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <p className="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+            Professional Personal Tax Support & Financial Guidance with secure document handling and personalized service
+          </p>
+        </div>
         
-        <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-x-6 sm:space-y-0 animate-slide-up delay-700">
+        <div className={`flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-x-6 sm:space-y-0 transition-all duration-700 delay-600 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <button
             onClick={scrollToContact}
-            className="group relative overflow-hidden rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="group relative bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-blue-500/25"
           >
-            <span className="relative z-10">Get Started Today</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+            <span className="flex items-center justify-center space-x-2">
+              <span>Get Started Today</span>
+              <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </span>
           </button>
           
           <button
             onClick={scrollToTaxForm}
-            className="group relative overflow-hidden rounded-lg border-2 border-blue-600 px-8 py-4 text-lg font-semibold text-blue-600 transition-all duration-300 hover:text-white hover:border-indigo-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="group border-2 border-slate-300 hover:border-blue-600 text-slate-700 hover:text-blue-600 font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-slate-500/25"
           >
-            <span className="relative z-10">Tax Service Request</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></div>
+            <span className="flex items-center justify-center space-x-2">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clipRule="evenodd" />
+              </svg>
+              <span>Tax Service Request</span>
+            </span>
           </button>
         </div>
         
-        <div className="mt-16 grid grid-cols-3 gap-8 max-w-md mx-auto animate-fade-in delay-1000">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">50+</div>
-            <div className="text-sm text-gray-600">Tax Returns</div>
+        {/* Professional stats */}
+        <div className={`mt-16 transition-all duration-700 delay-750 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+            <div className="text-center p-6 rounded-2xl bg-white/50 backdrop-blur-sm border border-white/60 shadow-sm">
+              <div className="text-3xl font-bold text-slate-900 mb-1">50+</div>
+              <div className="text-sm font-medium text-slate-600">Tax Returns Prepared</div>
+            </div>
+            <div className="text-center p-6 rounded-2xl bg-white/50 backdrop-blur-sm border border-white/60 shadow-sm">
+              <div className="text-3xl font-bold text-slate-900 mb-1">100%</div>
+              <div className="text-sm font-medium text-slate-600">Client Satisfaction</div>
+            </div>
+            <div className="text-center p-6 rounded-2xl bg-white/50 backdrop-blur-sm border border-white/60 shadow-sm">
+              <div className="text-3xl font-bold text-slate-900 mb-1">5★</div>
+              <div className="text-sm font-medium text-slate-600">Service Rating</div>
+            </div>
           </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">100%</div>
-            <div className="text-sm text-gray-600">Satisfaction</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">5★</div>
-            <div className="text-sm text-gray-600">Client Rating</div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className={`mt-20 transition-all duration-700 delay-900 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className="flex flex-col items-center space-y-2">
+            <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">Explore Services</span>
+            <div className="animate-bounce">
+              <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+            </div>
           </div>
         </div>
       </div>
