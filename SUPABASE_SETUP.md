@@ -6,7 +6,7 @@ Go to your Supabase dashboard → Storage → Create bucket:
 
 **Bucket name:** `tax-documents`
 **Public bucket:** ✅ Checked
-**File size limit:** 10MB
+**File size limit:** 5MB
 **Allowed MIME types:** `application/pdf,image/jpeg,image/jpg,image/png,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
 
 ## 2. Create Storage Policy

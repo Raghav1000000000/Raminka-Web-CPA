@@ -34,6 +34,18 @@ export default function TaxForm() {
     "Employed", "Self-employed", "Student", "Other"
   ];
 
+  // Define allowed file types at component level
+  const allowedTypes = [
+    'application/pdf',
+    'image/jpeg',
+    'image/jpg', 
+    'image/png',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  ];
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -67,6 +79,13 @@ export default function TaxForm() {
 
             if (error) {
               console.error('Storage upload error:', error);
+              if (error.message.includes('exceeded the maximum allowed size')) {
+                alert(`File "${file.name}" is too large for upload. Please ensure files are under 5MB.`);
+              } else if (error.message.includes('Invalid file type')) {
+                alert(`File "${file.name}" has an invalid file type. Please upload PDF, JPG, PNG, or DOC files only.`);
+              } else {
+                alert(`Failed to upload "${file.name}": ${error.message}`);
+              }
               // Continue without files if storage fails
               break;
             }
@@ -145,7 +164,21 @@ export default function TaxForm() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
-      const validFiles = files.filter(file => file.size <= 10 * 1024 * 1024); // 10MB limit
+      const validFiles = files.filter(file => {
+        const isValidType = allowedTypes.includes(file.type);
+        const isValidSize = file.size <= 5 * 1024 * 1024; // 5MB limit
+        
+        if (!isValidType) {
+          console.warn(`File ${file.name} rejected: invalid type`);
+          alert(`File "${file.name}" has an invalid file type. Please upload PDF, JPG, PNG, or DOC files only.`);
+        }
+        if (!isValidSize) {
+          console.warn(`File ${file.name} rejected: size too large (${(file.size / 1024 / 1024).toFixed(1)}MB)`);
+          alert(`File "${file.name}" is too large. Maximum file size is 5MB.`);
+        }
+        
+        return isValidType && isValidSize;
+      });
       setUploadedFiles(prev => [...prev, ...validFiles]);
     }
   };
@@ -166,17 +199,19 @@ export default function TaxForm() {
     
     const files = Array.from(e.dataTransfer.files);
     const validFiles = files.filter(file => {
-      const allowedTypes = [
-        'application/pdf',
-        'image/jpeg',
-        'image/jpg',
-        'image/png',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'application/vnd.ms-excel',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      ];
-      return allowedTypes.includes(file.type) && file.size <= 10 * 1024 * 1024;
+      const isValidType = allowedTypes.includes(file.type);
+      const isValidSize = file.size <= 5 * 1024 * 1024; // 5MB limit
+      
+      if (!isValidType) {
+        console.warn(`File ${file.name} rejected: invalid type`);
+        alert(`File "${file.name}" has an invalid file type. Please upload PDF, JPG, PNG, or DOC files only.`);
+      }
+      if (!isValidSize) {
+        console.warn(`File ${file.name} rejected: size too large (${(file.size / 1024 / 1024).toFixed(1)}MB)`);
+        alert(`File "${file.name}" is too large. Maximum file size is 5MB.`);
+      }
+      
+      return isValidType && isValidSize;
     });
     
     setUploadedFiles(prev => [...prev, ...validFiles]);
@@ -510,7 +545,7 @@ export default function TaxForm() {
                       <div className="flex items-center justify-center space-x-4 text-xs text-gray-500 pt-2">
                         <span>PDF, JPG, PNG, DOC, XLS</span>
                         <span>•</span>
-                        <span>Max 10MB per file</span>
+                        <span>Max 5MB per file</span>
                       </div>
                     </div>
                   </div>

@@ -1,10 +1,10 @@
 import { redirect } from 'next/navigation'
-import { checkAdminAuth } from '@/src/lib/auth'
 
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  // Admin routes now properly protected via (protected) route group
   return <>{children}</>
 }

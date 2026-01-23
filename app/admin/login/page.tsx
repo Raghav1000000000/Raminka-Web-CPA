@@ -19,7 +19,7 @@ export default function AdminLoginPage() {
       const result = await authenticateAdmin(password)
       
       if (result.success) {
-        router.push('/admin')
+        router.push('/admin/dashboard')
         router.refresh()
       } else {
         setError(result.error || 'Authentication failed')

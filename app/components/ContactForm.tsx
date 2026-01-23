@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "../../src/lib/supabase";
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -18,6 +17,14 @@ export default function ContactForm() {
     e.preventDefault();
     setIsLoading(true);
     setStatus('idle');
+
+    // Client-side validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setStatus('error');
+      setIsLoading(false);
+      return;
+    }
 
     try {
       console.log('Attempting to submit contact form...');

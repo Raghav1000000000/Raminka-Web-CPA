@@ -55,7 +55,7 @@ export default async function AdminPage() {
               const { data: signedUrlData, error: signedUrlError } = await supabaseAdmin
                 .storage
                 .from('tax-documents')
-                .createSignedUrl(filePath, 3600) // 1 hour expiry
+                .createSignedUrl(filePath, 600) // 10 minute expiry
               
               if (signedUrlError) {
                 console.error(`Error generating signed URL for ${filePath}:`, signedUrlError)
