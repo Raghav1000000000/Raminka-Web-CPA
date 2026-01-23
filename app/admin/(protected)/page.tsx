@@ -1,5 +1,5 @@
 import { supabaseAdmin } from '@/src/lib/supabase-admin'
-import AdminClient from './AdminClient'
+import AdminClient from '../AdminClient'
 
 export default async function AdminPage() {
   let taxRequests: any[] = []
@@ -48,47 +48,47 @@ export default async function AdminPage() {
               if (pathOrUrl.startsWith('http')) {
                 const urlParts = pathOrUrl.split('/');
                 filePath = urlParts[urlParts.length - 1]; // Get just the filename
-                console.log(`Extracted filename: ${filePath} from URL: ${pathOrUrl}`);
               }
               
-              console.log(`Creating signed URL for: ${filePath}`)
-
-              // Create signed URL with 24-hour expiry
-              const { data, error } = await supabaseAdmin.storage
+              console.log(`Generating signed URL for: ${filePath}`)
+              
+              const { data: signedUrlData, error: signedUrlError } = await supabaseAdmin
+                .storage
                 .from('tax-documents')
-                .createSignedUrl(filePath, 24 * 60 * 60)
-
-              if (error) {
-                console.error(`Error creating signed URL for ${filePath}:`, error)
-                // Store the original path/URL as key for fallback
-                fileUrls[pathOrUrl] = `/api/documents/${encodeURIComponent(filePath)}`
-                console.log(`Created fallback API URL for ${filePath}`)
-              } else if (data?.signedUrl) {
-                fileUrls[pathOrUrl] = data.signedUrl
-                console.log(`Created signed URL for ${filePath}`)
+                .createSignedUrl(filePath, 3600) // 1 hour expiry
+              
+              if (signedUrlError) {
+                console.error(`Error generating signed URL for ${filePath}:`, signedUrlError)
+                // Fallback to original URL if signed URL generation fails
+                fileUrls[pathOrUrl] = pathOrUrl
+              } else if (signedUrlData?.signedUrl) {
+                console.log(`✅ Generated signed URL for: ${filePath}`)
+                fileUrls[pathOrUrl] = signedUrlData.signedUrl
+              } else {
+                console.error(`No signed URL returned for: ${filePath}`)
+                fileUrls[pathOrUrl] = pathOrUrl
               }
-            } catch (error) {
-              console.error(`Exception creating signed URL for ${pathOrUrl}:`, error)
-              // Extract filename for fallback
-              const filename = pathOrUrl.includes('/') ? pathOrUrl.split('/').pop() : pathOrUrl;
-              fileUrls[pathOrUrl] = `/api/documents/${encodeURIComponent(filename || 'unknown')}`
+            } catch (urlError) {
+              console.error(`Exception generating signed URL for ${pathOrUrl}:`, urlError)
+              fileUrls[pathOrUrl] = pathOrUrl
             }
           }
         }
       }
-      console.log(`Generated ${Object.keys(fileUrls).length} file URLs (signed + fallback)`)
+      console.log(`Generated ${Object.keys(fileUrls).length} signed URLs`)
     }
-    
+
   } catch (error) {
-    console.error('Server-side data fetch error:', error)
+    console.error('Error in AdminPage:', error)
   }
 
   return (
-    <AdminClient
-      taxRequests={taxRequests}
-      contacts={contacts}
-      fileUrls={fileUrls}
-
-    />
+    <div className="min-h-screen bg-gray-50">
+      <AdminClient 
+        taxRequests={taxRequests}
+        contacts={contacts}
+        fileUrls={fileUrls}
+      />
+    </div>
   )
 }
