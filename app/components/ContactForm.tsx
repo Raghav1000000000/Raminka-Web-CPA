@@ -21,27 +21,28 @@ export default function ContactForm() {
 
     try {
       console.log('Attempting to submit contact form...');
-      const { data, error } = await supabase
-        .from('contacts')
-        .insert([
-          {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            message: formData.message
-          }
-        ]);
+      
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message
+        }),
+      });
 
-      console.log('Supabase response:', { data, error });
+      const result = await response.json();
 
-      if (error) {
-        console.error('Supabase error details:', {
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-          code: error.code
-        });
-        throw error;
+      if (!response.ok) {
+        if (response.status === 429) {
+          throw new Error('Too many requests. Please try again later.');
+        } else {
+          throw new Error(result.error || 'Failed to submit form');
+        }
       }
 
       console.log('Contact form submitted successfully');

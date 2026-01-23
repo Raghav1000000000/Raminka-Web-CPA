@@ -119,36 +119,42 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Privacy Notice */}
-          <div className="relative bg-gradient-to-r from-slate-800/50 to-slate-700/50 rounded-2xl p-8 mb-8 border border-slate-600/30 backdrop-blur-sm">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-2xl"></div>
-            <div className="relative">
-              <div className="flex items-center justify-center space-x-3 mb-4">
-                <div className="p-2 bg-blue-500/10 rounded-lg">
-                  <svg className="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <h4 className="text-lg font-semibold text-blue-400">Privacy & Security Notice</h4>
-              </div>
-              <p className="text-slate-300 text-center leading-relaxed">
-                This platform is designed for secure tax service delivery. All client documents are protected with 
-                enterprise-grade encryption and stored in compliance with Canadian privacy regulations. 
-                Your information remains confidential throughout our professional engagement.
-              </p>
-            </div>
-          </div>
-
           {/* Bottom Bar */}
           <div className="pt-8 border-t border-slate-700/50">
             <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center space-y-4 lg:space-y-0">
-              {/* Copyright */}
-              <div className="flex items-center space-x-2 justify-center lg:justify-start">
-                <p className="text-slate-400 text-sm">
-                  © {new Date().getFullYear()} Ramika Bahri. All rights reserved.
-                </p>
-                <div className="w-1 h-1 bg-slate-500 rounded-full"></div>
-                <span className="text-slate-500 text-sm">Aspiring CPA in Canada</span>
+              {/* Copyright & Legal Links */}
+              <div className="flex flex-col lg:flex-row lg:items-center space-y-2 lg:space-y-0 lg:space-x-6 justify-center lg:justify-start">
+                <div className="flex items-center space-x-2 justify-center lg:justify-start">
+                  <p className="text-slate-400 text-sm">
+                    © {new Date().getFullYear()} Ramika Bahri. All rights reserved.
+                  </p>
+                  <div className="w-1 h-1 bg-slate-500 rounded-full"></div>
+                  <span className="text-slate-500 text-sm">Aspiring CPA in Canada</span>
+                </div>
+                
+                {/* Legal Links */}
+                <div className="flex items-center justify-center lg:justify-start space-x-4 text-sm">
+                  <a 
+                    href="/privacy" 
+                    className="text-slate-400 hover:text-blue-400 transition-colors duration-200"
+                  >
+                    Privacy Policy
+                  </a>
+                  <div className="w-1 h-1 bg-slate-500 rounded-full"></div>
+                  <a 
+                    href="/terms" 
+                    className="text-slate-400 hover:text-blue-400 transition-colors duration-200"
+                  >
+                    Terms of Service
+                  </a>
+                  <div className="w-1 h-1 bg-slate-500 rounded-full"></div>
+                  <a 
+                    href="mailto:info@ramikabahri.ca" 
+                    className="text-slate-400 hover:text-purple-400 transition-colors duration-200"
+                  >
+                    Contact
+                  </a>
+                </div>
               </div>
 
               {/* Status Indicators */}

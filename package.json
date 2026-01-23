@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@types/bcryptjs": "^2.4.0",
+    "@upstash/ratelimit": "^2.0.3",
+    "@upstash/redis": "^1.34.0",
     "bcryptjs": "^2.4.0",
     "next": "16.1.4",
     "react": "19.2.3",

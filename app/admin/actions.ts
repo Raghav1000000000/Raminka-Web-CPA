@@ -1,11 +1,24 @@
 'use server'
 
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import bcryptjs from 'bcryptjs'
+import { adminLoginLimiter } from '@/src/lib/ratelimiter'
 
 export async function authenticateAdmin(password: string): Promise<{ success: boolean; error?: string }> {
   try {
+    // Apply rate limiting before authentication
+    const headersList = await headers()
+    const forwarded = headersList.get('x-forwarded-for')
+    const realIP = headersList.get('x-real-ip')
+    const ip = forwarded ? forwarded.split(',')[0].trim() : (realIP || '127.0.0.1')
+    
+    const { success: rateLimitSuccess } = await adminLoginLimiter.limit(`login:${ip}`)
+    
+    if (!rateLimitSuccess) {
+      return { success: false, error: 'Authentication failed' }
+    }
+
     const adminPasswordHashB64 = process.env.ADMIN_PASSWORD_HASH_B64
     
     if (!adminPasswordHashB64) {

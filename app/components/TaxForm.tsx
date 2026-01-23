@@ -21,6 +21,7 @@ export default function TaxForm() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [isDragOver, setIsDragOver] = useState(false);
+  const [privacyConsent, setPrivacyConsent] = useState(false);
 
   const provinces = [
     "Alberta", "British Columbia", "Manitoba", "New Brunswick", 
@@ -35,6 +36,14 @@ export default function TaxForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Check privacy consent
+    if (!privacyConsent) {
+      setStatus('error');
+      alert('Please confirm that you have read and agree to our Privacy Policy before submitting.');
+      return;
+    }
+    
     setIsSubmitting(true);
     setIsUploading(true);
     setStatus('idle');
@@ -115,6 +124,7 @@ export default function TaxForm() {
       });
       setUploadedFiles([]);
       setUploadProgress(0);
+      setPrivacyConsent(false);
 
     } catch (error) {
       console.error('Error submitting tax form:', error);
@@ -607,6 +617,45 @@ export default function TaxForm() {
               )}
             </div>
 
+            {/* Privacy Consent */}
+            <div className="border-t border-gray-200 pt-6">
+              <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
+                <label className="flex items-start space-x-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={privacyConsent}
+                    onChange={(e) => setPrivacyConsent(e.target.checked)}
+                    className="mt-1 w-4 h-4 text-blue-600 border-blue-300 rounded focus:ring-blue-500 focus:ring-2"
+                    required
+                  />
+                  <div className="flex-1 text-sm">
+                    <p className="text-gray-700 group-hover:text-gray-900 transition-colors">
+                      I acknowledge that I have read and agree to the{" "}
+                      <a 
+                        href="/privacy" 
+                        target="_blank" 
+                        className="text-blue-600 hover:text-blue-800 underline font-medium"
+                      >
+                        Privacy Policy
+                      </a>
+                      {" "}and{" "}
+                      <a 
+                        href="/terms" 
+                        target="_blank" 
+                        className="text-blue-600 hover:text-blue-800 underline font-medium"
+                      >
+                        Terms of Service
+                      </a>
+                      . I consent to the collection, use, and storage of my personal information as described, in accordance with PIPEDA and Canadian privacy law. I understand my information will be used exclusively for tax preparation services and CRA filing.
+                    </p>
+                    <p className="text-xs text-gray-600 mt-2">
+                      <strong>Required:</strong> Consent under PIPEDA is mandatory to proceed with Canadian tax services.
+                    </p>
+                  </div>
+                </label>
+              </div>
+            </div>
+
             <div className="flex flex-col items-center space-y-4 pt-6">
               {status === 'success' && (
                 <div className="w-full p-4 bg-green-50 border border-green-200 rounded-lg text-center">
@@ -632,7 +681,7 @@ export default function TaxForm() {
 
               <button
                 type="submit"
-                disabled={isSubmitting || isUploading}
+                disabled={isSubmitting || isUploading || !privacyConsent}
                 className="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-4 px-12 rounded-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 <span className="relative z-10 flex items-center space-x-3">

@@ -84,18 +84,18 @@ export default function Hero() {
         
         {/* Professional stats */}
         <div className={`mt-16 transition-all duration-700 delay-750 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center p-6 rounded-2xl bg-white/50 backdrop-blur-sm border border-white/60 shadow-sm">
-              <div className="text-3xl font-bold text-slate-900 mb-1">50+</div>
-              <div className="text-sm font-medium text-slate-600">Tax Returns Prepared</div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8 max-w-2xl mx-auto">
+            <div className="text-center p-4 sm:p-6 rounded-2xl bg-white/50 backdrop-blur-sm border border-white/60 shadow-sm">
+              <div className="text-2xl sm:text-3xl font-bold text-slate-900 mb-1">50+</div>
+              <div className="text-xs sm:text-sm font-medium text-slate-600">Tax Returns Prepared</div>
             </div>
-            <div className="text-center p-6 rounded-2xl bg-white/50 backdrop-blur-sm border border-white/60 shadow-sm">
-              <div className="text-3xl font-bold text-slate-900 mb-1">100%</div>
-              <div className="text-sm font-medium text-slate-600">Client Satisfaction</div>
+            <div className="text-center p-4 sm:p-6 rounded-2xl bg-white/50 backdrop-blur-sm border border-white/60 shadow-sm">
+              <div className="text-2xl sm:text-3xl font-bold text-slate-900 mb-1">100%</div>
+              <div className="text-xs sm:text-sm font-medium text-slate-600">Client Satisfaction</div>
             </div>
-            <div className="text-center p-6 rounded-2xl bg-white/50 backdrop-blur-sm border border-white/60 shadow-sm">
-              <div className="text-3xl font-bold text-slate-900 mb-1">5★</div>
-              <div className="text-sm font-medium text-slate-600">Service Rating</div>
+            <div className="text-center p-4 sm:p-6 rounded-2xl bg-white/50 backdrop-blur-sm border border-white/60 shadow-sm">
+              <div className="text-2xl sm:text-3xl font-bold text-slate-900 mb-1">5★</div>
+              <div className="text-xs sm:text-sm font-medium text-slate-600">Service Rating</div>
             </div>
           </div>
         </div>
