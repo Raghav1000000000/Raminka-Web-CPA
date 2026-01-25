@@ -50,3 +50,63 @@ export async function logoutAdmin() {
   cookieStore.delete('admin_session')
   redirect('/admin/login')
 }
+
+export async function deleteTaxRequest(id: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    // Check admin authentication
+    const cookieStore = await cookies()
+    const adminSession = cookieStore.get('admin_session')
+    
+    if (!adminSession || adminSession.value !== 'authenticated') {
+      return { success: false, error: 'Unauthorized' }
+    }
+
+    // Use admin client for deletion
+    const { supabaseAdmin } = await import('@/src/lib/supabase-admin')
+    
+    const { error } = await supabaseAdmin
+      .from('tax_requests')
+      .delete()
+      .eq('id', id)
+
+    if (error) {
+      console.error('Error deleting tax request:', error)
+      return { success: false, error: 'Failed to delete tax request' }
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error('Error deleting tax request:', error)
+    return { success: false, error: 'Failed to delete tax request' }
+  }
+}
+
+export async function deleteContact(id: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    // Check admin authentication
+    const cookieStore = await cookies()
+    const adminSession = cookieStore.get('admin_session')
+    
+    if (!adminSession || adminSession.value !== 'authenticated') {
+      return { success: false, error: 'Unauthorized' }
+    }
+
+    // Use admin client for deletion
+    const { supabaseAdmin } = await import('@/src/lib/supabase-admin')
+    
+    const { error } = await supabaseAdmin
+      .from('contacts')
+      .delete()
+      .eq('id', id)
+
+    if (error) {
+      console.error('Error deleting contact:', error)
+      return { success: false, error: 'Failed to delete contact' }
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error('Error deleting contact:', error)
+    return { success: false, error: 'Failed to delete contact' }
+  }
+}

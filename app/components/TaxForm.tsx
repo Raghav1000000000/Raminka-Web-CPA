@@ -362,21 +362,28 @@ export default function TaxForm() {
                 <label htmlFor="province" className="block text-sm font-semibold text-gray-700 mb-2">
                   Province *
                 </label>
-                <select
-                  id="province"
-                  name="province"
-                  required
-                  value={formData.province}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 group-hover:border-gray-300"
-                >
-                  <option value="">Select your province</option>
-                  {provinces.map((province) => (
-                    <option key={province} value={province}>
-                      {province}
-                    </option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    id="province"
+                    name="province"
+                    required
+                    value={formData.province}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 pr-10 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 group-hover:border-gray-300 bg-white appearance-none cursor-pointer"
+                  >
+                    <option value="" disabled className="text-gray-400">Select your province</option>
+                    {provinces.map((province) => (
+                      <option key={province} value={province} className="text-gray-900 py-2">
+                        {province}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -401,21 +408,28 @@ export default function TaxForm() {
                 <label htmlFor="employmentStatus" className="block text-sm font-semibold text-gray-700 mb-2">
                   Employment Status *
                 </label>
-                <select
-                  id="employmentStatus"
-                  name="employmentStatus"
-                  required
-                  value={formData.employmentStatus}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 group-hover:border-gray-300"
-                >
-                  <option value="">Select employment status</option>
-                  {employmentStatuses.map((status) => (
-                    <option key={status} value={status}>
-                      {status}
-                    </option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    id="employmentStatus"
+                    name="employmentStatus"
+                    required
+                    value={formData.employmentStatus}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 pr-10 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 group-hover:border-gray-300 bg-white appearance-none cursor-pointer"
+                  >
+                    <option value="" disabled className="text-gray-400">Select employment status</option>
+                    {employmentStatuses.map((status) => (
+                      <option key={status} value={status} className="text-gray-900 py-2">
+                        {status}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             </div>
 

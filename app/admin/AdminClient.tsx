@@ -1,17 +1,72 @@
 "use client"
 
 import { useState } from "react"
-import { logoutAdmin } from "./actions"
+import { logoutAdmin, deleteTaxRequest as deleteTaxRequestAction, deleteContact as deleteContactAction } from "./actions"
 
 export default function AdminClient({
-  taxRequests,
-  contacts,
+  taxRequests: initialTaxRequests,
+  contacts: initialContacts,
   fileUrls
 }: any) {
   const [activeTab, setActiveTab] = useState<'tax' | 'contact'>('tax')
+  const [taxRequests, setTaxRequests] = useState(initialTaxRequests)
+  const [contacts, setContacts] = useState(initialContacts)
+  const [isDeleting, setIsDeleting] = useState<string | null>(null)
 
   const handleLogout = async () => {
     await logoutAdmin()
+  }
+
+  const deleteTaxRequest = async (id: string) => {
+    // Find the request to get details for confirmation
+    const request = taxRequests.find((req: any) => req.id === id)
+    const requestDetails = request ? `\n\nRequest Details:\n• Name: ${request.name}\n• Email: ${request.email}\n• Tax Year: ${request.tax_year}\n• Created: ${new Date(request.created_at).toLocaleDateString()}` : ''
+    
+    if (!confirm(`⚠️ DELETE TAX REQUEST\n\nAre you absolutely sure you want to permanently delete this tax request?${requestDetails}\n\n❌ THIS ACTION CANNOT BE UNDONE!\n\nClick OK to delete, or Cancel to keep the request.`)) {
+      return
+    }
+
+    setIsDeleting(id)
+    try {
+      const result = await deleteTaxRequestAction(id)
+      
+      if (result.success) {
+        setTaxRequests(taxRequests.filter((req: any) => req.id !== id))
+      } else {
+        alert(result.error || 'Failed to delete tax request. Please try again.')
+      }
+    } catch (error) {
+      console.error('Error deleting tax request:', error)
+      alert('Failed to delete tax request. Please try again.')
+    } finally {
+      setIsDeleting(null)
+    }
+  }
+
+  const deleteContact = async (id: string) => {
+    // Find the contact to get details for confirmation
+    const contact = contacts.find((c: any) => c.id === id)
+    const contactDetails = contact ? `\n\nMessage Details:\n• Name: ${contact.name}\n• Email: ${contact.email}\n• Date: ${new Date(contact.created_at).toLocaleDateString()}\n• Message: "${contact.message.substring(0, 100)}${contact.message.length > 100 ? '...' : ''}"` : ''
+    
+    if (!confirm(`⚠️ DELETE CONTACT MESSAGE\n\nAre you absolutely sure you want to permanently delete this contact message?${contactDetails}\n\n❌ THIS ACTION CANNOT BE UNDONE!\n\nClick OK to delete, or Cancel to keep the message.`)) {
+      return
+    }
+
+    setIsDeleting(id)
+    try {
+      const result = await deleteContactAction(id)
+      
+      if (result.success) {
+        setContacts(contacts.filter((contact: any) => contact.id !== id))
+      } else {
+        alert(result.error || 'Failed to delete contact message. Please try again.')
+      }
+    } catch (error) {
+      console.error('Error deleting contact:', error)
+      alert('Failed to delete contact message. Please try again.')
+    } finally {
+      setIsDeleting(null)
+    }
   }
 
   const getFileIcon = (fileName: string) => {
@@ -150,15 +205,36 @@ export default function AdminClient({
                     <div key={request.id} className="bg-gray-50 rounded-xl border border-gray-200 p-6 hover:shadow-md transition-shadow">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <div className="flex items-center space-x-3 mb-3">
-                            <h3 className="text-lg font-semibold text-gray-900">{request.name}</h3>
-                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                              request.documents_ready 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-yellow-100 text-yellow-800'
-                            }`}>
-                              {request.documents_ready ? 'Documents Ready' : 'Needs Help'}
-                            </span>
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center space-x-3">
+                              <h3 className="text-lg font-semibold text-gray-900">{request.name}</h3>
+                              <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                request.documents_ready 
+                                  ? 'bg-green-100 text-green-800' 
+                                  : 'bg-yellow-100 text-yellow-800'
+                              }`}>
+                                {request.documents_ready ? 'Documents Ready' : 'Needs Help'}
+                              </span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <span className="text-xs text-gray-500">
+                                {new Date(request.created_at).toLocaleDateString()}
+                              </span>
+                              <button
+                                onClick={() => deleteTaxRequest(request.id)}
+                                disabled={isDeleting === request.id}
+                                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                title="Delete tax request"
+                              >
+                                {isDeleting === request.id ? (
+                                  <div className="w-4 h-4 border-2 border-gray-300 border-t-red-600 rounded-full animate-spin"></div>
+                                ) : (
+                                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9zM4 5a2 2 0 012-2h8a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 102 0v3a1 1 0 11-2 0V9zm4 0a1 1 0 10-2 0v3a1 1 0 102 0V9z" clipRule="evenodd" />
+                                  </svg>
+                                )}
+                              </button>
+                            </div>
                           </div>
                           
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm text-gray-600 mb-4">
@@ -272,9 +348,25 @@ export default function AdminClient({
                     <div key={contact.id} className="bg-gray-50 rounded-xl border border-gray-200 p-6 hover:shadow-md transition-shadow">
                       <div className="flex items-start justify-between mb-4">
                         <h3 className="text-lg font-semibold text-gray-900">{contact.name}</h3>
-                        <span className="text-xs text-gray-500">
-                          {new Date(contact.created_at).toLocaleDateString()}
-                        </span>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-xs text-gray-500">
+                            {new Date(contact.created_at).toLocaleDateString()}
+                          </span>
+                          <button
+                            onClick={() => deleteContact(contact.id)}
+                            disabled={isDeleting === contact.id}
+                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            title="Delete contact message"
+                          >
+                            {isDeleting === contact.id ? (
+                              <div className="w-4 h-4 border-2 border-gray-300 border-t-red-600 rounded-full animate-spin"></div>
+                            ) : (
+                              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9zM4 5a2 2 0 012-2h8a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 102 0v3a1 1 0 11-2 0V9zm4 0a1 1 0 10-2 0v3a1 1 0 102 0V9z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </button>
+                        </div>
                       </div>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 mb-4">
