@@ -42,12 +42,6 @@ export default function ConsentBanner() {
             <span className="font-semibold text-sm sm:text-base">
               🆕 NEW: Digital Signature & Consent Form Available!
             </span>
-            <Link 
-              href="/consent" 
-              className="bg-white text-purple-600 px-4 py-1 rounded-full text-sm font-bold hover:bg-purple-50 transition-colors"
-            >
-              Try Now →
-            </Link>
           </div>
         </div>
       </div>
