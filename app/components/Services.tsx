@@ -1,3 +1,5 @@
+import { ScrollFadeIn, ScrollScale } from './ScrollAnimations';
+
 export default function Services() {
   const services = [
     {
@@ -36,7 +38,7 @@ export default function Services() {
   return (
     <section className="bg-white py-20 px-4">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16 animate-fade-in">
+        <ScrollFadeIn className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl font-bold text-gray-900 sm:text-5xl mb-6">
             Professional Tax Services
           </h2>
@@ -44,14 +46,14 @@ export default function Services() {
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Comprehensive tax solutions designed to meet your needs with expertise, security, and clear communication.
           </p>
-        </div>
+        </ScrollFadeIn>
         
         <div className="grid md:grid-cols-3 gap-8">
           {services.map((service, index) => (
-            <div
+            <ScrollFadeIn
               key={index}
-              className={`group text-center p-8 rounded-xl border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-slide-up`}
-              style={{ animationDelay: `${index * 200}ms` }}
+              delay={200 + index * 200}
+              className="group text-center p-8 rounded-xl border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
             >
               <div className="flex justify-center mb-6 transform transition-transform duration-300 group-hover:scale-110">
                 {service.icon}
@@ -62,7 +64,7 @@ export default function Services() {
               <p className="text-gray-600 leading-relaxed">
                 {service.description}
               </p>
-            </div>
+            </ScrollFadeIn>
           ))}
         </div>
       </div>

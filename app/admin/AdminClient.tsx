@@ -2,15 +2,18 @@
 
 import { useState } from "react"
 import { logoutAdmin, deleteTaxRequest as deleteTaxRequestAction, deleteContact as deleteContactAction } from "./actions"
+import AdminAnalytics from "./components/AdminAnalytics"
 
 export default function AdminClient({
   taxRequests: initialTaxRequests,
   contacts: initialContacts,
+  consents: initialConsents,
   fileUrls
 }: any) {
-  const [activeTab, setActiveTab] = useState<'tax' | 'contact'>('tax')
+  const [activeTab, setActiveTab] = useState<'tax' | 'contact' | 'consents' | 'analytics'>('tax')
   const [taxRequests, setTaxRequests] = useState(initialTaxRequests)
   const [contacts, setContacts] = useState(initialContacts)
+  const [consents, setConsents] = useState(initialConsents)
   const [isDeleting, setIsDeleting] = useState<string | null>(null)
 
   const handleLogout = async () => {
@@ -66,6 +69,27 @@ export default function AdminClient({
       alert('Failed to delete contact message. Please try again.')
     } finally {
       setIsDeleting(null)
+    }
+  }
+
+  const downloadConsentPDF = async (consentId: string, clientName: string) => {
+    try {
+      const response = await fetch(`/api/admin/consent-pdf?id=${consentId}`)
+      if (!response.ok) throw new Error('Failed to generate PDF')
+      
+      const html = await response.text()
+      
+      // Create a new window/tab for the PDF
+      const newWindow = window.open('', '_blank')
+      if (newWindow) {
+        newWindow.document.write(html)
+        newWindow.document.close()
+      } else {
+        alert('Please enable popups to download the consent PDF')
+      }
+    } catch (error) {
+      console.error('Error downloading consent PDF:', error)
+      alert('Failed to download consent PDF. Please try again.')
     }
   }
 
@@ -131,7 +155,7 @@ export default function AdminClient({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center">
               <div className="p-3 bg-blue-100 rounded-lg">
@@ -160,6 +184,20 @@ export default function AdminClient({
               </div>
             </div>
           </div>
+          
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center">
+              <div className="p-3 bg-purple-100 rounded-lg">
+                <svg className="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Signed Consents</p>
+                <p className="text-2xl font-bold text-gray-900">{consents.length}</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Tabs */}
@@ -185,6 +223,26 @@ export default function AdminClient({
                 }`}
               >
                 Contact Messages ({contacts.length})
+              </button>
+              <button
+                onClick={() => setActiveTab('consents')}
+                className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                  activeTab === 'consents'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                Consent Forms ({consents.length})
+              </button>
+              <button
+                onClick={() => setActiveTab('analytics')}
+                className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                  activeTab === 'analytics'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                Analytics & Performance
               </button>
             </nav>
           </div>
@@ -394,6 +452,105 @@ export default function AdminClient({
                     </div>
                   ))
                 )}
+              </div>
+            )}
+
+            {activeTab === 'consents' && (
+              <div className="space-y-6">
+                {consents.length === 0 ? (
+                  <div className="text-center py-12">
+                    <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">No consent forms yet</h3>
+                    <p className="text-gray-600">Client consent forms will appear here</p>
+                  </div>
+                ) : (
+                  consents.map((consent: any) => (
+                    <div key={consent.id} className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl border border-purple-200 p-6 hover:shadow-md transition-shadow">
+                      <div className="flex items-start justify-between mb-4">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {consent.client_name}
+                          <span className="ml-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            </svg>
+                            Signed
+                          </span>
+                        </h3>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-xs text-gray-500">
+                            {new Date(consent.created_at).toLocaleDateString()}
+                          </span>
+                          <button
+                            onClick={() => downloadConsentPDF(consent.id, consent.client_name)}
+                            className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200"
+                          >
+                            <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+                            </svg>
+                            Download PDF
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600 mb-4">
+                        <div className="flex items-center space-x-2">
+                          <svg className="w-4 h-4 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                          </svg>
+                          <span>{consent.client_email}</span>
+                        </div>
+                        {consent.client_phone && (
+                          <div className="flex items-center space-x-2">
+                            <svg className="w-4 h-4 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                            </svg>
+                            <span>{consent.client_phone}</span>
+                          </div>
+                        )}
+                        <div className="flex items-center space-x-2">
+                          <svg className="w-4 h-4 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                          </svg>
+                          <span>{new Date(consent.consent_date).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+
+                      <div className="bg-white p-4 rounded-lg border border-purple-200">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="text-sm font-medium text-gray-900">Digital Signature:</h4>
+                          <span className="text-xs text-gray-500">{consent.consent_type}</span>
+                        </div>
+                        {consent.signature_data ? (
+                          <div className="bg-gray-50 p-3 rounded border text-center">
+                            <img
+                              src={consent.signature_data}
+                              alt={`${consent.client_name} signature`}
+                              className="max-w-full h-16 mx-auto border border-gray-200 rounded"
+                            />
+                          </div>
+                        ) : (
+                          <p className="text-xs text-gray-400">No signature data available</p>
+                        )}
+                        
+                        <div className="mt-3 pt-3 border-t border-gray-200">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-500">
+                            <div>IP: {consent.ip_address}</div>
+                            <div>Submitted: {new Date(consent.created_at).toLocaleString()}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+
+            {activeTab === 'analytics' && (
+              <div className="space-y-6">
+                <AdminAnalytics />
               </div>
             )}
           </div>

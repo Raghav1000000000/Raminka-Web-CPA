@@ -1,3 +1,5 @@
+import { ScrollFadeIn } from './ScrollAnimations';
+
 export default function TrustStrip() {
   const trustItems = [
     { 
@@ -43,17 +45,17 @@ export default function TrustStrip() {
   return (
     <section className="bg-gradient-to-r from-gray-50 to-blue-50 py-16 px-4">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
+        <ScrollFadeIn className="text-center mb-12">
           <h3 className="text-2xl font-bold text-gray-900 mb-2">Why Choose Ramika Bahri</h3>
           <div className="h-0.5 w-16 bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto rounded-full"></div>
-        </div>
+        </ScrollFadeIn>
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {trustItems.map((item, index) => (
-            <div 
-              key={index} 
-              className={`flex flex-col items-center space-y-3 group animate-fade-in hover:scale-105 transition-transform duration-300`}
-              style={{ animationDelay: `${index * 150}ms` }}
+            <ScrollFadeIn
+              key={index}
+              delay={200 + index * 150}
+              className="flex flex-col items-center space-y-3 group hover:scale-105 transition-transform duration-300"
             >
               <div className="transform transition-transform duration-300 group-hover:scale-110">
                 {item.icon}
@@ -61,7 +63,7 @@ export default function TrustStrip() {
               <span className="text-sm font-semibold text-gray-700 sm:text-base group-hover:text-blue-600 transition-colors">
                 {item.text}
               </span>
-            </div>
+            </ScrollFadeIn>
           ))}
         </div>
       </div>

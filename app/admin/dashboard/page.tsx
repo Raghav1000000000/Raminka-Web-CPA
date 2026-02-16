@@ -4,6 +4,7 @@ import AdminClient from '../AdminClient'
 export default async function AdminPage() {
   let taxRequests: any[] = []
   let contacts: any[] = []
+  let consents: any[] = []
   let fileUrls: Record<string, string> = {}
   
   try {
@@ -33,6 +34,19 @@ export default async function AdminPage() {
     } else {
       contacts = contactsData ?? []
       console.log('Contacts fetched:', contacts.length)
+    }
+
+    // Fetch consent forms
+    const { data: consentsData, error: consentsError } = await supabaseAdmin
+      .from('client_consents')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (consentsError) {
+      console.error('Consents error:', consentsError)
+    } else {
+      consents = consentsData ?? []
+      console.log('Consents fetched:', consents.length)
     }
 
     // Generate signed URLs with improved error handling
@@ -87,6 +101,7 @@ export default async function AdminPage() {
       <AdminClient 
         taxRequests={taxRequests}
         contacts={contacts}
+        consents={consents}
         fileUrls={fileUrls}
       />
     </div>

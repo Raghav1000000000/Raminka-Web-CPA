@@ -273,30 +273,30 @@ export default function TaxForm() {
   };
 
   return (
-    <section id="tax-form" className="bg-gradient-to-br from-indigo-50 to-purple-50 py-20 px-4">
+    <section id="tax-form" className="bg-gradient-to-br from-indigo-50 via-blue-50 to-purple-50 py-16 sm:py-20 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-16 animate-fade-in">
-          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6">
+        <div className="text-center mb-12 sm:mb-16 animate-fade-in">
+          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6 shadow-lg">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clipRule="evenodd" />
             </svg>
             <span>Quick & Secure</span>
           </div>
           
-          <h2 className="text-4xl font-bold text-gray-900 sm:text-5xl mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
             Start Your Tax Service
           </h2>
           <div className="h-1 w-24 bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto rounded-full mb-6"></div>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Complete this form to begin your personalized tax preparation service. All information is kept strictly confidential.
           </p>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-2xl p-8 sm:p-12 animate-slide-up border border-gray-100">
-          <div className="mb-8">
-            <div className="flex items-center justify-between">
-              <h3 className="text-2xl font-bold text-gray-900">Tax Service Request</h3>
-              <div className="flex items-center space-x-2 text-green-600">
+        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 lg:p-12 animate-slide-up border border-gray-100">
+          <div className="mb-6 sm:mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900">Tax Service Request</h3>
+              <div className="flex items-center space-x-2 text-green-600 bg-green-50 px-3 py-2 rounded-lg w-fit">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                 </svg>
@@ -307,9 +307,9 @@ export default function TaxForm() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="group">
-                <label htmlFor="fullName" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="fullName" className="block text-sm font-semibold text-gray-700 mb-3">
                   Full Legal Name *
                 </label>
                 <input
@@ -319,13 +319,13 @@ export default function TaxForm() {
                   required
                   value={formData.fullName}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 group-hover:border-gray-300"
+                  className="w-full px-4 py-4 text-base border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 group-hover:border-gray-300 touch-manipulation"
                   placeholder="As it appears on your ID"
                 />
               </div>
 
               <div className="group">
-                <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-3">
                   Email Address *
                 </label>
                 <input
@@ -335,15 +335,15 @@ export default function TaxForm() {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 group-hover:border-gray-300"
+                  className="w-full px-4 py-4 text-base border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 group-hover:border-gray-300 touch-manipulation"
                   placeholder="your.email@example.com"
                 />
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="group">
-                <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-3">
                   Phone Number *
                 </label>
                 <input
@@ -353,13 +353,13 @@ export default function TaxForm() {
                   required
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 group-hover:border-gray-300"
+                  className="w-full px-4 py-4 text-base border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 group-hover:border-gray-300 touch-manipulation"
                   placeholder="(555) 123-4567"
                 />
               </div>
 
               <div className="group">
-                <label htmlFor="province" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="province" className="block text-sm font-semibold text-gray-700 mb-3">
                   Province *
                 </label>
                 <div className="relative">
@@ -369,16 +369,16 @@ export default function TaxForm() {
                     required
                     value={formData.province}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 pr-10 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 group-hover:border-gray-300 bg-white appearance-none cursor-pointer"
+                    className="w-full px-4 py-4 pr-12 text-base border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 group-hover:border-gray-300 bg-white appearance-none cursor-pointer touch-manipulation"
                   >
                     <option value="" disabled className="text-gray-400">Select your province</option>
                     {provinces.map((province) => (
-                      <option key={province} value={province} className="text-gray-900 py-2">
+                      <option key={province} value={province} className="text-gray-900 py-3">
                         {province}
                       </option>
                     ))}
                   </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
                     <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
@@ -387,9 +387,9 @@ export default function TaxForm() {
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="group">
-                <label htmlFor="taxYear" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="taxYear" className="block text-sm font-semibold text-gray-700 mb-3">
                   Tax Year *
                 </label>
                 <input
@@ -399,13 +399,13 @@ export default function TaxForm() {
                   required
                   value={formData.taxYear}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 group-hover:border-gray-300"
+                  className="w-full px-4 py-4 text-base border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 group-hover:border-gray-300 touch-manipulation"
                   placeholder="2024, 2023, etc."
                 />
               </div>
 
               <div className="group">
-                <label htmlFor="employmentStatus" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="employmentStatus" className="block text-sm font-semibold text-gray-700 mb-3">
                   Employment Status *
                 </label>
                 <div className="relative">
@@ -415,16 +415,16 @@ export default function TaxForm() {
                     required
                     value={formData.employmentStatus}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 pr-10 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 group-hover:border-gray-300 bg-white appearance-none cursor-pointer"
+                    className="w-full px-4 py-4 pr-12 text-base border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 group-hover:border-gray-300 bg-white appearance-none cursor-pointer touch-manipulation"
                   >
                     <option value="" disabled className="text-gray-400">Select employment status</option>
                     {employmentStatuses.map((status) => (
-                      <option key={status} value={status} className="text-gray-900 py-2">
+                      <option key={status} value={status} className="text-gray-900 py-3">
                         {status}
                       </option>
                     ))}
                   </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
                     <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
@@ -437,49 +437,49 @@ export default function TaxForm() {
               <label className="block text-sm font-semibold text-gray-700">
                 Do you have all your tax documents ready? *
               </label>
-              <div className="grid md:grid-cols-2 gap-4">
-                <label className="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition-all duration-300 hover:border-gray-300 hover:bg-gray-50">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label className="flex items-center p-4 sm:p-5 border-2 border-gray-200 rounded-xl cursor-pointer transition-all duration-300 hover:border-gray-300 hover:bg-gray-50 active:scale-95 touch-manipulation">
                   <input
                     type="radio"
                     name="documentsReady"
                     value="yes"
                     checked={formData.documentsReady === "yes"}
                     onChange={handleChange}
-                    className="mr-3 text-blue-600 focus:ring-blue-500 w-4 h-4"
+                    className="mr-4 text-blue-600 focus:ring-blue-500 w-5 h-5"
                   />
                   <div>
-                    <div className="font-medium text-gray-900">Yes, I'm ready!</div>
-                    <div className="text-sm text-gray-600">I have all my documents</div>
+                    <div className="font-medium text-gray-900 text-base">Yes, I'm ready!</div>
+                    <div className="text-sm text-gray-600 mt-1">I have all my documents</div>
                   </div>
                 </label>
-                <label className="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition-all duration-300 hover:border-gray-300 hover:bg-gray-50">
+                <label className="flex items-center p-4 sm:p-5 border-2 border-gray-200 rounded-xl cursor-pointer transition-all duration-300 hover:border-gray-300 hover:bg-gray-50 active:scale-95 touch-manipulation">
                   <input
                     type="radio"
                     name="documentsReady"
                     value="no"
                     checked={formData.documentsReady === "no"}
                     onChange={handleChange}
-                    className="mr-3 text-blue-600 focus:ring-blue-500 w-4 h-4"
+                    className="mr-4 text-blue-600 focus:ring-blue-500 w-5 h-5"
                   />
                   <div>
-                    <div className="font-medium text-gray-900">Need help</div>
-                    <div className="text-sm text-gray-600">Help gathering documents</div>
+                    <div className="font-medium text-gray-900 text-base">Need help</div>
+                    <div className="text-sm text-gray-600 mt-1">Help gathering documents</div>
                   </div>
                 </label>
               </div>
             </div>
 
             <div className="group">
-              <label htmlFor="notes" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="notes" className="block text-sm font-semibold text-gray-700 mb-3">
                 Additional Notes
               </label>
               <textarea
                 id="notes"
                 name="notes"
-                rows={4}
+                rows={5}
                 value={formData.notes}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 group-hover:border-gray-300 resize-vertical"
+                className="w-full px-4 py-4 text-base border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 group-hover:border-gray-300 resize-vertical touch-manipulation"
                 placeholder="Tell me about your specific tax situation, any questions, or special circumstances..."
               />
             </div>

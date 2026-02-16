@@ -68,7 +68,7 @@ export default function TermsOfService() {
             </p>
             <ul className="list-disc pl-6 mb-6 text-gray-700">
               <li>Canada Revenue Agency regulations for tax preparers</li>
-              <li>Professional standards for aspiring CPAs in Canada</li>
+              <li>Professional standards for tax consultants in Canada</li>
               <li>Current federal Income Tax Act and provincial tax legislation</li>
               <li>CRA's Taxpayer Bill of Rights principles</li>
             </ul>
@@ -158,7 +158,7 @@ export default function TermsOfService() {
             </p>
             <div className="bg-gray-50 p-4 rounded-lg mb-6">
               <p className="text-gray-700">
-                <strong>Service Provider:</strong> Ramika Bahri (Aspiring CPA)<br/>
+                <strong>Service Provider:</strong> Ramika Bahri (Professional Tax Consultant)<br/>
                 <strong>Business Email:</strong> info@ramikabahri.ca<br/>
                 <strong>Professional Inquiries:</strong> Terms of Service Inquiry<br/>
                 <strong>Services:</strong> Personal Income Tax Preparation (Canada)<br/>

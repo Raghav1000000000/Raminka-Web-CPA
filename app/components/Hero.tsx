@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { ScrollFadeIn, ScrollScale } from './ScrollAnimations';
 
 export default function Hero() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -32,7 +33,7 @@ export default function Hero() {
       {/* Main content */}
       <div className={`relative max-w-6xl text-center transition-all duration-700 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
         {/* Header section */}
-        <div className={`mb-8 transition-all duration-700 delay-150 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <ScrollFadeIn className="mb-8" delay={200}>
           <div className="relative">
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-900 mb-6 tracking-tight">
               <span className="block mb-2">Ramika Bahri</span>
@@ -41,22 +42,22 @@ export default function Hero() {
               </span>
             </h1>
           </div>
-        </div>
+        </ScrollFadeIn>
         
-        <div className={`mb-8 transition-all duration-700 delay-300 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <ScrollFadeIn className="mb-8" delay={400}>
           <p className="text-xl sm:text-2xl text-slate-600 font-light mb-4">
-            Aspiring CPA in Canada
+            Professional Tax Consultant
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto rounded-full"></div>
-        </div>
+        </ScrollFadeIn>
         
-        <div className={`mb-12 transition-all duration-700 delay-450 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <ScrollFadeIn className="mb-12" delay={600}>
           <p className="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
             Professional Personal Tax Support & Financial Guidance with secure document handling and personalized service
           </p>
-        </div>
+        </ScrollFadeIn>
         
-        <div className={`flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-x-6 sm:space-y-0 transition-all duration-700 delay-600 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <ScrollFadeIn className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-x-6 sm:space-y-0" delay={800}>
           <button
             onClick={scrollToContact}
             className="group relative bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-blue-500/25"
@@ -80,28 +81,31 @@ export default function Hero() {
               <span>Tax Service Request</span>
             </span>
           </button>
-        </div>
+        </ScrollFadeIn>
         
-        {/* Professional stats */}
-        <div className={`mt-16 transition-all duration-700 delay-750 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8 max-w-2xl mx-auto">
-            <div className="text-center p-4 sm:p-6 rounded-2xl bg-white/50 backdrop-blur-sm border border-white/60 shadow-sm">
-              <div className="text-2xl sm:text-3xl font-bold text-slate-900 mb-1">50+</div>
-              <div className="text-xs sm:text-sm font-medium text-slate-600">Tax Returns Prepared</div>
-            </div>
-            <div className="text-center p-4 sm:p-6 rounded-2xl bg-white/50 backdrop-blur-sm border border-white/60 shadow-sm">
-              <div className="text-2xl sm:text-3xl font-bold text-slate-900 mb-1">100%</div>
-              <div className="text-xs sm:text-sm font-medium text-slate-600">Client Satisfaction</div>
-            </div>
-            <div className="text-center p-4 sm:p-6 rounded-2xl bg-white/50 backdrop-blur-sm border border-white/60 shadow-sm">
-              <div className="text-2xl sm:text-3xl font-bold text-slate-900 mb-1">5★</div>
-              <div className="text-xs sm:text-sm font-medium text-slate-600">Service Rating</div>
+        {/* Professional achievement highlight */}
+        <ScrollScale className="mt-16" delay={1000}>
+          <div className="text-center">
+            <div className="inline-flex items-center space-x-4 bg-gradient-to-r from-blue-50 to-indigo-50 px-8 py-6 rounded-2xl border border-blue-100/50 shadow-lg backdrop-blur-sm">
+              <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full shadow-md">
+                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <div className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  200+
+                </div>
+                <div className="text-lg font-semibold text-slate-700 mt-1">
+                  Tax Returns Filed Successfully
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </ScrollScale>
 
         {/* Scroll indicator */}
-        <div className={`mt-20 transition-all duration-700 delay-900 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <ScrollFadeIn className="mt-20" delay={1200}>
           <div className="flex flex-col items-center space-y-2">
             <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">Explore Services</span>
             <div className="animate-bounce">
@@ -110,7 +114,7 @@ export default function Hero() {
               </svg>
             </div>
           </div>
-        </div>
+        </ScrollFadeIn>
       </div>
     </section>
   );
